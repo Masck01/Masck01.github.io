@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Twpoints",
+  "description": "A helper to get Twitch points",
+  "version": "1.0",
+  "icon_author": "BiZkettE1 / Freepick",
+  "browser_action": {
+    "default_popup": "./index.html",
+    "default_icon": "./favicon.ico"
+  }
+}
