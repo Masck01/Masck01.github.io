@@ -1348,32 +1348,27 @@
 
 /* End of Webpack Hot Extension Middleware  */
 
-/* ----------------------------------------------- */(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["background"],{
+/* ----------------------------------------------- */(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["content"],{
 
-/***/ "./src/background.ts":
-/*!***************************!*\
-  !*** ./src/background.ts ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./src/content.ts":
+/*!************************!*\
+  !*** ./src/content.ts ***!
+  \************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/// <reference types="chrome"/>
-const rule1 = {
-    conditions: [
-        new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: { hostEquals: 'www.twitch.tv', schemes: ['https'] },
-        }),
-    ],
-    actions: [new chrome.declarativeContent.ShowPageAction()],
-};
-chrome.runtime.onInstalled.addListener((details) => {
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-        chrome.declarativeContent.onPageChanged.addRules([rule1]);
-    });
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+
+const button = Object(rxjs__WEBPACK_IMPORTED_MODULE_0__["of"])(1, 2, 3);
+console.log('iniciando la deteccion del boton de puntos');
+button.subscribe((el) => {
+    console.log(el);
 });
 
 
 /***/ })
 
-},[["./src/background.ts","runtime"]]]);
-//# sourceMappingURL=background.js.map
+},[["./src/content.ts","runtime","vendor"]]]);
+//# sourceMappingURL=content.js.map

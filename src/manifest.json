@@ -4,12 +4,19 @@
   "description": "A helper to get Twitch points",
   "version": "1.0",
   "icon_author": "BiZkettE1 / Freepick",
-  "browser_action": {
+  "page_action": {
     "default_icon": "./favicon.ico",
     "default_popup": "index.html"
   },
   "background": {
     "scripts": ["background.js", "runtime.js"],
     "persistent": false
-  }
+  },
+  "permissions": ["declarativeContent", "webNavigation", "activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "js": ["content.js","runtime.js","vendor.js"]
+    }
+  ]
 }

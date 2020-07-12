@@ -8,7 +8,7 @@
             "type": "node-terminal",
             "request": "launch",
             "name": "Launch Twpoints",
-            "command": "npm run build",
+            "command": "npm start",
             "skipFiles": [
                 "<node_internals>/**"
             ],
