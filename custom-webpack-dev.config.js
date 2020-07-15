@@ -9,6 +9,7 @@ module.exports = {
       reloadPage: true,
       entries: {
         background: "background",
+        contentScript:"content"
       },
     }),
   ],

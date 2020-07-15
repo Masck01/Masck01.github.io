@@ -1,4 +1,6 @@
-<h1>{{title}}</h1>
 
-<button (click)='load()' >ClickMe</button>
+<button #botonBono (click)='toggleStrmBtn()' [disabled]='active'></button>
+<p>El buscador se encuentra {{active ? 'inactivo' : 'activo'}} </p>
 <router-outlet></router-outlet>
+
+<app-on-off></app-on-off>
