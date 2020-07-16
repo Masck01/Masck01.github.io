@@ -1,5 +1,4 @@
 import {
-  animation,
   trigger,
   state,
   style,

@@ -257,7 +257,8 @@ class OnOffComponent {
     constructor(cdr) {
         this.cdr = cdr;
         // Front Stream
-        this.svgState$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Observable"]();
+        this.svgSubject$ = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        // States of Smile
         this.feliz = {
             d: 'm 17.712164,11.468389 a 7.6833334,6.5297031 0 0 1 -3.841667,5.654888 7.6833334,6.5297031 0 0 1 -7.6833334,0 7.6833334,6.5297031 0 0 1 -3.8416665,-5.654889 l 7.6833339,1e-6 z',
             t: 'scale(1)',
@@ -267,9 +268,20 @@ class OnOffComponent {
             t: 'scale(1,-1)',
         };
     }
+    ngOnDestroy() {
+        // Prevent memory leaks
+        this.svgState$.unsubscribe();
+    }
+    // Directives of Subscription starts
     ngAfterViewInit() {
         this.svgClick$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["fromEvent"])(this.layer.nativeElement, 'click');
-        this.svgState$ = this.svgClick$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["scan"])((acc) => !acc, true), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["startWith"])(true));
+        this.svgState$ = this.svgClick$
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["startWith"])(true), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["scan"])((acc) => {
+            this.svgSubject$.emit(acc);
+            return !acc;
+        }, true), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(() => this.svgSubject$.asObservable()))
+            .subscribe();
+        // Expresion changed after it was checked. Solver
         this.cdr.detectChanges();
     }
 }
@@ -279,7 +291,7 @@ OnOffComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCom
     } if (rf & 2) {
         var _t;
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.layer = _t.first);
-    } }, decls: 10, vars: 9, consts: [["width", "20mm", "height", "20mm", "version", "1.1", "viewBox", "0 0 20 20", "xmlns", "http://www.w3.org/2000/svg"], ["layer1", ""], ["stroke", "#0e2839"], ["x", ".41748", "y", ".42078", "width", "19.165", "height", "19.158", "ry", "0", "fill", "none", "stroke-width", ".83833"], ["transform", "matrix(0,-1,-1,0,0,0)", "d", "m-2.3036-8.4756a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z", "fill", "#f6d5ff", "stroke-width", ".88602"], ["transform", "rotate(-90)", "d", "m-2.3036 11.57a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z", "fill", "#f6d5ff", "stroke-width", ".88602"], ["fill", "#5d536c", "stroke-width", ".69567"]], template: function OnOffComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, outputs: { svgSubject$: "svgSubject$" }, decls: 10, vars: 9, consts: [["width", "20mm", "height", "20mm", "version", "1.1", "viewBox", "0 0 20 20", "xmlns", "http://www.w3.org/2000/svg"], ["layer1", ""], ["stroke", "#0e2839"], ["x", ".41748", "y", ".42078", "width", "19.165", "height", "19.158", "ry", "0", "fill", "none", "stroke-width", ".83833"], ["transform", "matrix(0,-1,-1,0,0,0)", "d", "m-2.3036-8.4756a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z", "fill", "#f6d5ff", "stroke-width", ".88602"], ["transform", "rotate(-90)", "d", "m-2.3036 11.57a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z", "fill", "#f6d5ff", "stroke-width", ".88602"], ["fill", "#5d536c", "stroke-width", ".69567"]], template: function OnOffComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnamespaceSVG"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "svg", 0, 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "g", 2);
@@ -294,9 +306,9 @@ OnOffComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCom
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("@onOffSvg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](3, 3, ctx.svgState$) ? "wakeUp" : "sleep");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("@onOffSvg", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](3, 3, ctx.svgSubject$) ? "wakeUp" : "sleep");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("transform", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](8, 5, ctx.svgState$) ? ctx.feliz.t : ctx.triste.t)("d", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](9, 7, ctx.svgState$) ? ctx.feliz.d : ctx.triste.d);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵattribute"]("transform", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](8, 5, ctx.svgSubject$) ? ctx.feliz.t : ctx.triste.t)("d", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](9, 7, ctx.svgSubject$) ? ctx.feliz.d : ctx.triste.d);
     } }, pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["AsyncPipe"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL29uLW9mZi9vbi1vZmYuY29tcG9uZW50LmNzcyJ9 */"], data: { animation: [_svg_animations__WEBPACK_IMPORTED_MODULE_2__["svgAnimations"]] } });
 /*@__PURE__*/ (function () { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](OnOffComponent, [{
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
@@ -306,7 +318,9 @@ OnOffComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCom
                 templateUrl: './on-off.component.svg',
                 styleUrls: ['./on-off.component.css'],
             }]
-    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"] }]; }, { layer: [{
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ChangeDetectorRef"] }]; }, { svgSubject$: [{
+            type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"]
+        }], layer: [{
             type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
             args: ['layer1']
         }] }); })();

@@ -1,13 +1,13 @@
 <svg #layer1 width="20mm" height="20mm" version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
  <g
-    [@onOffSvg]="(svgState$ | async) ? 'wakeUp': 'sleep'"
+    [@onOffSvg]="(svgSubject$ | async) ? 'wakeUp': 'sleep'"
   stroke="#0e2839">
   <rect x=".41748" y=".42078" width="19.165" height="19.158" ry="0" fill="none" stroke-width=".83833"/>
   <path transform="matrix(0,-1,-1,0,0,0)" d="m-2.3036-8.4756a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z" fill="#f6d5ff" stroke-width=".88602"/>
   <path transform="rotate(-90)" d="m-2.3036 11.57a7.2962 3.2537 0 0 1-7.2962 3.2537l-2e-7 -3.2537z" fill="#f6d5ff" stroke-width=".88602"/>
   <path 
-       [attr.transform] ="(svgState$ | async) ? feliz.t : triste.t"
-  [attr.d]="(svgState$ | async) ? feliz.d : triste.d"
+       [attr.transform] ="(svgSubject$ | async) ? feliz.t : triste.t"
+  [attr.d]="(svgSubject$ | async) ? feliz.d : triste.d"
    fill="#5d536c" stroke-width=".69567"/>
  </g>
 </svg>
