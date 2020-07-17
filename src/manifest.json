@@ -11,11 +11,11 @@
     "scripts": ["background.js", "runtime.js"],
     "persistent": false
   },
-  "permissions": ["declarativeContent", "activeTab"],
+  "permissions": ["declarativeContent", "activeTab", "storage"],
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["content.js","runtime.js","vendor.js"]
+      "js": ["content.js", "runtime.js", "vendor.js"]
     }
   ]
 }

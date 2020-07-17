@@ -43,8 +43,9 @@ export class OnOffComponent implements AfterViewInit, OnDestroy {
   };
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  // Prevent memory leaks
   ngOnDestroy(): void {
-    // Prevent memory leaks
     this.svgState$.unsubscribe();
   }
 

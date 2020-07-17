@@ -1360,33 +1360,66 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm2015/operators/index.js");
 
-const overtime = Object(rxjs__WEBPACK_IMPORTED_MODULE_0__["timer"])(5000, 30000);
-const buscador = () => document.querySelector('[data-test-selector=community-points-summary]');
-const buscadorBtn = () => document.querySelector('button.tw-button--success.tw-interactive');
-const startSearchButton = () => {
-    console.log('iniciando la deteccion del boton de puntos');
-    const timetap = overtime.subscribe({
-        next: () => {
-            if (buscadorBtn() !== null) {
-                console.log('button encontrado');
-                buscadorBtn().click();
+
+class Content {
+    constructor() {
+        // Stream that emits every 30sec
+        this.overtime = Object(rxjs__WEBPACK_IMPORTED_MODULE_0__["timer"])(5000, 30000);
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.start === 'initAction') {
+                this.startSearchPuntos();
+                // Chrome Storage
+                chrome.storage.local.set({ twpoints: 'active' }, () => console.log('stored'));
+                sendResponse(this.startSearchPuntos);
+                console.log(message);
             }
-            else {
-                console.log('button no encontrado');
+            if (message.stop === 'stopAction') {
+                this.stopSearchPuntos();
+                // Before remove
+                chrome.storage.local.get('twpoints', (keys) => console.log(keys));
+                // Chrome remove key twpoint
+                chrome.storage.local.remove('twpoints', () => console.log('removed twpoints'));
+                sendResponse(this.stopSearchPuntos);
+                console.log(message);
             }
-        },
-        error: (err) => {
-            console.log(err);
-        },
-    });
-};
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.executeButton === 'ejecutarboton') {
-        startSearchButton();
-        sendResponse(startSearchButton);
+        });
     }
-});
+    // Searcher for Box puntos
+    buscador() {
+        return document.querySelector('[data-test-selector=community-points-summary]');
+    }
+    // Button puntos
+    buscadorBtn() {
+        return document.querySelector('button.tw-button--success.tw-interactive');
+    }
+    // Start search for puntos button
+    startSearchPuntos() {
+        console.log('iniciando la deteccion del boton de puntos');
+        this.sub$ = this.overtime
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])((val) => {
+            console.log('value desde tab', val);
+        }))
+            .subscribe({
+            next: () => {
+                if (this.buscadorBtn() !== null) {
+                    console.log('button encontrado');
+                    this.buscadorBtn().click();
+                }
+                else {
+                    console.log('button no encontrado');
+                }
+            },
+            error: () => console.error,
+        });
+    }
+    stopSearchPuntos() {
+        this.sub$.unsubscribe();
+        console.log('terminando deteccion de puntos');
+    }
+}
+const appContent = new Content();
 
 
 /***/ })

@@ -3,13 +3,13 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { TwAppComponent } from './twapp.component';
 import { OnOffComponent } from './on-off/on-off.component';
 
 @NgModule({
-  declarations: [AppComponent, OnOffComponent],
+  declarations: [TwAppComponent, OnOffComponent],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [TwAppComponent],
 })
 export class AppModule {}
