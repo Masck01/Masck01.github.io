@@ -8,14 +8,28 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["background.js", "runtime.js"],
-    "persistent": false
+    "scripts": [
+      "background-es2015.47886f82c82917291a55.js",
+      "background-es5.47886f82c82917291a55.js",
+      "runtime-es2015.0dae8cbc97194c7caed4.js",
+      "runtime-es5.0dae8cbc97194c7caed4.js",
+      "vendor-es2015.c51b46c7c5e6ef6a3bbf.js",
+      "vendor-es5.c51b46c7c5e6ef6a3bbf.js"
+    ],
+    "persistent": true
   },
-  "permissions": ["declarativeContent", "activeTab", "storage"],
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["content.js", "runtime.js", "vendor.js"]
+      "js": [
+        "content-es2015.9029028cb6c7faefa664.js",
+        "content-es5.9029028cb6c7faefa664.js",
+        "runtime-es2015.0dae8cbc97194c7caed4.js",
+        "runtime-es5.0dae8cbc97194c7caed4.js",
+        "vendor-es2015.c51b46c7c5e6ef6a3bbf.js",
+        "vendor-es5.c51b46c7c5e6ef6a3bbf.js"
+      ]
     }
-  ]
+  ],
+  "permissions": ["declarativeContent", "storage", "tabs", "activeTab"]
 }

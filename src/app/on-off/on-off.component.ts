@@ -3,14 +3,16 @@ import {
   ViewChild,
   AfterViewInit,
   ElementRef,
-  EventEmitter,
-  Output,
   OnDestroy,
 } from '@angular/core';
-import { Observable, fromEvent, Subscription } from 'rxjs';
+import { Observable, fromEvent, Subscription, Subject } from 'rxjs';
 import { svgAnimations } from './svg-animations';
-import { scan, startWith, switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ChangeDetectorRef } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { BonoStateChange } from '../../shared/bono.actions';
+import { Bono } from '../models/bono';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-on-off',
@@ -21,11 +23,12 @@ import { ChangeDetectorRef } from '@angular/core';
 export class OnOffComponent implements AfterViewInit, OnDestroy {
   // Initial Stream
   svgClick$: Observable<Event>;
-  // Front Stream
-  @Output() svgSubject$ = new EventEmitter<boolean>();
 
-  // Intermediate Subscription
-  svgState$: Subscription;
+  // Front Stream
+  svgSubject$ = new Subject<Bono>();
+
+  // Intercept Subscriptions
+  svgSub$ = new SubSink();
 
   // Child ref (svg)
   @ViewChild('layer1') layer: ElementRef;
@@ -42,28 +45,26 @@ export class OnOffComponent implements AfterViewInit, OnDestroy {
     t: 'scale(1,-1)',
   };
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private store: Store, private cdref: ChangeDetectorRef) {}
 
   // Prevent memory leaks
   ngOnDestroy(): void {
-    this.svgState$.unsubscribe();
+    this.svgSub$.unsubscribe();
   }
 
   // Directives of Subscription starts
   ngAfterViewInit(): void {
-    this.svgClick$ = fromEvent(this.layer.nativeElement, 'click');
-    this.svgState$ = this.svgClick$
-      .pipe(
-        startWith(true),
-        scan((acc) => {
-          this.svgSubject$.emit(acc);
-          return !acc;
-        }, true),
-        switchMap(() => this.svgSubject$.asObservable())
-      )
-      .subscribe();
+    this.svgSub$.add(this.bonoInitState(), this.toggleStatus());
+    this.cdref.detectChanges();
+  }
 
-    // Expresion changed after it was checked. Solver
-    this.cdr.detectChanges();
+  toggleStatus(): Subscription {
+    return fromEvent(this.layer.nativeElement, 'click')
+      .pipe(switchMap(() => this.store.dispatch(new BonoStateChange())))
+      .subscribe();
+  }
+
+  bonoInitState(): Subscription {
+    return this.store.select((s) => s.bono.estado).subscribe(this.svgSubject$);
   }
 }

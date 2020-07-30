@@ -1,76 +1,101 @@
-import { timer, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, filter, delay } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { SubSink } from 'subsink';
+import { BasicCommands } from './app/basic-commands';
 
-class Content {
-  // Stream that emits every 30sec
-  overtime = timer(5000, 30000);
+export class Content implements BasicCommands {
+  start = 'initAction';
+  stop = 'stopAction';
 
-  // Intermediate Subscription
-  sub$: Subscription;
+  // Subject
+  svgSubject$ = new Subject<boolean>();
+
+  // Mutation Observer
+  mutationObserver: MutationObserver;
+
+  // Subscriptions Handler
+  contentSub$ = new SubSink();
+
+  touchPuntos = (sub: HTMLButtonElement) => sub.click();
 
   constructor() {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.start === 'initAction') {
-        this.startSearchPuntos();
-        // Chrome Storage
-        chrome.storage.local.set({ twpoints: 'active' }, () =>
-          console.log('stored')
-        );
-        sendResponse(this.startSearchPuntos);
-        console.log(message);
-      }
-      if (message.stop === 'stopAction') {
-        this.stopSearchPuntos();
-        // Before remove
-        chrome.storage.local.get('twpoints', (keys) => console.log(keys));
-        // Chrome remove key twpoint
-        chrome.storage.local.remove('twpoints', () =>
-          console.log('removed twpoints')
-        );
-        sendResponse(this.stopSearchPuntos);
-        console.log(message);
-      }
-    });
-  }
+    this.checkTwpoints();
+    this.addListeners();
 
-  // Searcher for Box puntos
-  buscador() {
-    return document.querySelector(
-      '[data-test-selector=community-points-summary]'
-    );
-  }
-  // Button puntos
-  buscadorBtn() {
-    return document.querySelector(
-      'button.tw-button--success.tw-interactive'
-    ) as HTMLButtonElement;
-  }
-  // Start search for puntos button
-  startSearchPuntos() {
-    console.log('iniciando la deteccion del boton de puntos');
-    this.sub$ = this.overtime
-      .pipe(
-        tap((val) => {
-          console.log('value desde tab', val);
-        })
-      )
-      .subscribe({
-        next: () => {
-          if (this.buscadorBtn() !== null) {
-            console.log('button encontrado');
-            this.buscadorBtn().click();
-          } else {
-            console.log('button no encontrado');
-          }
-        },
-        error: () => console.error,
+    this.mutationObserver = new MutationObserver(this.callback);
+
+    this.contentSub$.sink = this.svgSubject$
+      .pipe(delay(3000))
+      .subscribe((val) => {
+        if (val === true) {
+          this.startMutationObserver();
+        }
       });
   }
 
-  stopSearchPuntos() {
-    this.sub$.unsubscribe();
-    console.log('terminando deteccion de puntos');
+  // Mutador Observador
+  callback(mutaciones: MutationRecord[]): void {
+    from(mutaciones)
+      .pipe(
+        filter(
+          (x) =>
+            (x.target as Element).querySelector(
+              'button.tw-button.tw-button--success.tw-interactive'
+            ) !== null
+        ),
+        map(
+          (x) =>
+            (x.target as Element).querySelector(
+              'button.tw-button.tw-button--success.tw-interactive'
+            ) as HTMLButtonElement
+        )
+      )
+      .subscribe((x) => x.click());
+  }
+
+  // Check if storage is online
+  checkTwpoints(): void {
+    chrome.storage.sync.get('estado', (keys) => {
+      keys.estado === true
+        ? this.svgSubject$.next(keys.estado)
+        : this.svgSubject$.next(false);
+    });
+  }
+
+  stopMutationObserver() {
+    // Stop mutation Observer
+    this.mutationObserver.disconnect();
+    this.contentSub$.unsubscribe();
+    // Before remove
+    chrome.runtime.sendMessage({ stop: this.stop });
+    // Chrome remove key twpoint
+    chrome.storage.sync.remove('estado');
+  }
+
+  startMutationObserver() {
+    chrome.storage.sync.set({ estado: true });
+    chrome.runtime.sendMessage({ start: this.start });
+    const downChatBoxContainer = document.querySelector(
+      '[data-test-selector=chat-input-buttons-container]'
+    );
+    this.mutationObserver.observe(downChatBoxContainer, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+  }
+
+  addListeners() {
+    chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
+      if (message.start === this.start) {
+        this.startMutationObserver();
+      }
+      if (message.stop === this.stop) {
+        this.stopMutationObserver();
+      }
+    });
   }
 }
 
-const appContent = new Content();
+const content = new Content();

@@ -8,14 +8,19 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["background.js", "runtime.js"],
-    "persistent": false
+    "scripts": ["background.js", "runtime.js", "vendor.js"],
+    "persistent": true
   },
-  "permissions": ["declarativeContent", "activeTab", "storage"],
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
       "js": ["content.js", "runtime.js", "vendor.js"]
     }
+  ],
+  "permissions": [
+    "declarativeContent",
+    "storage",
+    "tabs",
+    "activeTab"
   ]
 }

@@ -1,4 +1,3 @@
-<p>El buscador se encuentra {{(active$ | async) ? 'activo' : 'inactivo'}} </p>
+<p>{{(bono$ | async) ? 'Active' : 'Disabled'}} </p>
+<app-on-off></app-on-off>
 <router-outlet></router-outlet>
-
-<app-on-off (svgSubject$)='toggleStrmBtn($event)'></app-on-off>
