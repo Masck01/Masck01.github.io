@@ -8,13 +8,13 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["background.js", "runtime.js", "vendor.js"],
+    "scripts": ["background-es5.js", "runtime-es5.js", "vendor-es5.js"],
     "persistent": true
   },
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "js": ["content.js", "runtime.js", "vendor.js"]
+      "js": ["content-es5.js", "runtime-es5.js", "vendor-es5.js"]
     }
   ],
   "permissions": [

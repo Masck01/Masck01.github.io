@@ -41,13 +41,13 @@ export class Content implements BasicCommands {
         filter(
           (x) =>
             (x.target as Element).querySelector(
-              'button.tw-button.tw-button--success.tw-interactive'
+              '.ScCoreButton-sc-1qn4ixc-0.ScCoreButtonSuccess-sc-1qn4ixc-5.VGQNd'
             ) !== null
         ),
         map(
           (x) =>
             (x.target as Element).querySelector(
-              'button.tw-button.tw-button--success.tw-interactive'
+              '.ScCoreButton-sc-1qn4ixc-0.ScCoreButtonSuccess-sc-1qn4ixc-5.VGQNd'
             ) as HTMLButtonElement
         )
       )
