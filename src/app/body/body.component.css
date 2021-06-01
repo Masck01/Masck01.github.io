@@ -1,0 +1,80 @@
+body div {
+  margin: 0;
+  padding: 0;
+}
+
+.contenedor {
+  position: relative;
+  margin: 0 auto;
+  width: 75%;
+  height: 100vh;
+  text-align: center;
+  background-color: hsla(120, 75%, 50%, 0.5);
+  border: thick outset;
+}
+
+h1 {
+  font-family: monospace, "Lucida Console";
+  margin-top: 3rem;
+  color: hsla(100, 50%, 50%, 1);
+  font-size: 3rem;
+  text-decoration: underline;
+  text-shadow: -0.15rem 0.2rem hsla(240, 75%, 50%, 0.5);
+}
+
+h3 {
+  font-family: monospace;
+  font-size: 2rem;
+  text-shadow: 0.1rem 0.1rem hsla(0, 10%, 30%, 0.3);
+}
+.sub_contenedor {
+  display: flex;
+  text-align: center;
+  padding: 1rem;
+}
+.disclaimer {
+  flex-direction: column;
+}
+
+.sub_contenedor p,
+li {
+  width: calc(100vw / 4.5);
+  padding: 0 0.3rem 0.2rem 1rem;
+  font-family: Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue";
+  text-align: left;
+  font-weight: bold;
+  color: hsla(0, 10%, 30%, 0.7);
+}
+
+.updates p {
+  color: hsla(0, 10%, 30%, 0.7);
+  font-family: Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue";
+  font-weight: bold;
+}
+
+.development{
+    position: absolute;
+    top: 90%;
+    left: 90%;
+}
+
+.development > p{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: hsla(190, 60%, 40%, 0.5);
+}
+
+@media only screen and (max-width: 600px) {
+  .sub_contenedor p,
+  li {
+    width: calc(100vw / 75%);
+    padding: 0 0.3rem 0.2rem 1rem;
+    font-family: Helvetica, sans-serif;
+    text-align: left;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  .contenedor {
+    height: 100%;
+  }
+}
